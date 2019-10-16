@@ -1,7 +1,4 @@
-#include <stdio.h>
-
 int add(int a, int b) {
-  sendToJs(12);
   return a + b;
 }
 

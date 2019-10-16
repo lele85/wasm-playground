@@ -1,13 +1,59 @@
 <!DOCTYPE html>
 
 <script type="module">
+  import {html, render} from 'https://unpkg.com/lit-html?module';
+  
   async function init() {
+    // We instantiate the wasm calculator
     const { instance } = await WebAssembly
         .instantiateStreaming(
-            fetch("/calc.wasm"),
-            { imports: { imported_func: arg => console.log(arg) } }
+            fetch("/calc.wasm")
         );
-    window.calc = instance.exports;
+    const { add, sub } = instance.exports;
+
+    // We define a local state
+    const state = {
+      a: 0,
+      b: 0,
+      sum: 0
+    };
+
+    // We define a change function
+    // Delegated the sum to WASM code and rerender
+    const onChange = (prop, val) => {
+      state[prop] = val;
+      state.sum = add(state.a, state.b);
+      render(myTemplate(state), document.body);
+    }
+
+    // We define a template
+    const myTemplate = ({a,b,sum}) => html`
+      <div>
+        <h1>Wasm Playground</h1>
+        <input
+          @change=${({target: {value}}) => {onChange("a",parseInt(value));}}
+          value="${state.a}"
+          type="number"
+        />
+        +
+        <input
+          @change=${({target: {value}}) => {onChange("b",parseInt(value));}}
+          value="${state.b}"
+          type="number"
+        />
+          =
+        <input
+          readonly
+          disabled
+          type="number"
+          value="${state.sum}"
+        />
+      </div>
+    `;
+  
+    // Forst render
+    render(myTemplate(state), document.body);
   }
+
   init();
 </script>
