@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  dev:
+    build:
+      context: .
+    volumes:
+      - /workspace/wasm-playground:/workspace/wasm-playground:delegated
+    ports:
+      - "10001:10001"
+    command:
+      sleep 100000

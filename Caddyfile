@@ -1,0 +1,8 @@
+localhost:10001 {
+  root ./build
+  
+  mime {
+    .wasm application/wasm
+  }
+  
+}
