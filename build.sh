@@ -34,6 +34,7 @@ wasm-objdump -x $BUILD_PATH/calc.o
 wasm-objdump -x $BUILD_PATH/functions.o
 
 wasm-ld \
+  -allow-undefined-file $SOURCE_PATH/wasm.syms \
   --no-entry \
   --export-all \
   -o $BUILD_PATH/calc.wasm \

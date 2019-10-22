@@ -7,7 +7,12 @@
     // We instantiate the wasm calculator
     const { instance } = await WebAssembly
         .instantiateStreaming(
-            fetch("/calc.wasm")
+            fetch("/calc.wasm"),
+            {
+              env: {
+                logjs: (a) => { console.log(a); }
+              }
+            }
         );
     const { add, sub } = instance.exports;
 
