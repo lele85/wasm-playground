@@ -4,8 +4,9 @@ services:
   dev:
     build:
       context: .
+    working_dir: /wasm-playground
     volumes:
-      - /workspace/wasm-playground:/workspace/wasm-playground:delegated
+      - ./:/wasm-playground
     ports:
       - "10001:10001"
     command:
