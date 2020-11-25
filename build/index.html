@@ -20,14 +20,21 @@
     const state = {
       a: 0,
       b: 0,
-      sum: 0
+      action: "+",
+      result: 0
+    };
+
+    // Function map in WASM land associated to the action
+    const functions = {
+      "+": add,
+      "-": sub
     };
 
     // We define a change function
-    // Delegated the sum to WASM code and rerender
+    // Delegated the computation to WASM code and rerender
     const onChange = (prop, val) => {
       state[prop] = val;
-      state.sum = add(state.a, state.b);
+      state.result = functions[state.action](state.a, state.b);
       render(myTemplate(state), document.body);
     }
 
@@ -40,7 +47,13 @@
           value="${state.a}"
           type="number"
         />
-        +
+        <select
+          @change=${({target: {value}}) => {onChange("action",value);}}
+          value="${state.action}"
+        >
+          <option value="+">+</option>
+          <option value="-">-</option>
+        </select>
         <input
           @change=${({target: {value}}) => {onChange("b",parseInt(value));}}
           value="${state.b}"
@@ -51,12 +64,12 @@
           readonly
           disabled
           type="number"
-          value="${state.sum}"
+          value="${state.result}"
         />
       </div>
     `;
   
-    // Forst render
+    // First render
     render(myTemplate(state), document.body);
   }
 
